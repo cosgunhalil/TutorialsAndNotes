@@ -19,7 +19,7 @@ public class LineManager : MonoBehaviour {
 
     private void DrawMap(List<Transform> dots)
     {
-        _lineRenderer.numPositions = dots.Count;
+        _lineRenderer.positionCount = dots.Count;
 
         for (int i = 0; i < dots.Count; i++)
         {
