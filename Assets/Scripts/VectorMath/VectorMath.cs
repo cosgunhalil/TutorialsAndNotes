@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,25 +12,19 @@ public class VectorMath : MonoBehaviour {
 	public CheckableObject CheckedObject;
 
 	public LineRenderer LineRenderer;
-	
-	// Update is called once per frame
+
+    private float _distance;
+    private Vector3 _vector;
+    private Vector3 _normalizedVector;
+
 	void Update () 
 	{
-		var distance = Vector3.Distance(EndPoint.position,StartPoint.position);
-		var vector = EndPoint.position - StartPoint.position;
-		var normalized = Vector3.Normalize (vector);
+        CalculateParameters();
+        SetPointerPosition();
+        DrawLine();
 
+        var position = CalculateDotPositionSign();
 
-		Pointer.position = EndPoint.position + distance * normalized;
-
-		LineRenderer.positionCount = 3;
-
-		LineRenderer.SetPosition (0, StartPoint.position);
-		LineRenderer.SetPosition (1, EndPoint.position);
-		LineRenderer.SetPosition (2, Pointer.position);
-
-		var position = Mathf.Sign ((EndPoint.position.x - StartPoint.position.x) * (CheckedObject.ObjectTransform.position.y - StartPoint.position.y) -
-		               (EndPoint.position.y - StartPoint.position.y) * (CheckedObject.ObjectTransform.position.x - StartPoint.position.x));
 		if (position > 0) 
 		{
 			CheckedObject.SetColor (Color.yellow);
@@ -40,5 +35,35 @@ public class VectorMath : MonoBehaviour {
 		}
 
 	}
-		
+
+    private void CalculateParameters()
+    {
+        _distance = Vector3.Distance(EndPoint.position, StartPoint.position);
+        _vector = EndPoint.position - StartPoint.position;
+        _normalizedVector = Vector3.Normalize(_vector);
+    }
+
+    private void SetPointerPosition()
+    {
+        Pointer.position = EndPoint.position + _distance * _normalizedVector;
+    }
+
+    private void DrawLine()
+    {
+        LineRenderer.positionCount = 3;
+
+        LineRenderer.SetPosition(0, StartPoint.position);
+        LineRenderer.SetPosition(1, EndPoint.position);
+        LineRenderer.SetPosition(2, Pointer.position);
+    }
+
+    private float CalculateDotPositionSign()
+    {
+        var sign = Mathf.Sign((EndPoint.position.x - StartPoint.position.x) *
+                   (CheckedObject.ObjectTransform.position.y - StartPoint.position.y) -
+                   (EndPoint.position.y - StartPoint.position.y) *
+                   (CheckedObject.ObjectTransform.position.x - StartPoint.position.x));
+
+        return sign;
+    }
 }
