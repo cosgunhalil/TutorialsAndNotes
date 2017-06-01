@@ -1,0 +1,68 @@
+{
+  "geocoding": {
+    "version": "0.2",
+    "attribution": "https://search.mapzen.com/v1/attribution",
+    "query": {
+      "ids": [
+        {
+          "source": "geonames",
+          "layer": "venue",
+          "id": "309597"
+        }
+      ],
+      "private": false,
+      "lang": {
+        "name": "Turkish",
+        "iso6391": "tr",
+        "iso6393": "tur",
+        "defaulted": false
+      }
+    },
+    "engine": {
+      "name": "Pelias",
+      "author": "Mapzen",
+      "version": "1.0"
+    },
+    "timestamp": 1496220630305
+  },
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.78155,
+          39.89124
+        ]
+      },
+      "properties": {
+        "id": "309597",
+        "gid": "geonames:venue:309597",
+        "layer": "venue",
+        "source": "geonames",
+        "source_id": "309597",
+        "name": "Ortadoğu Teknik Üniversitesi",
+        "accuracy": "point",
+        "country": "Turkey",
+        "country_gid": "whosonfirst:country:85632393",
+        "country_a": "TUR",
+        "region": "Ankara",
+        "region_gid": "whosonfirst:region:85679409",
+        "county": "Çankaya",
+        "county_gid": "whosonfirst:county:890462517",
+        "locality": "Gaziorman Çiftliği",
+        "locality_gid": "whosonfirst:locality:101912789",
+        "neighbourhood": "Ortadogu",
+        "neighbourhood_gid": "whosonfirst:neighbourhood:85929671",
+        "label": "Ortadoğu Teknik Üniversitesi, Gaziorman Çiftliği, Turkey"
+      }
+    }
+  ],
+  "bbox": [
+    32.78155,
+    39.89124,
+    32.78155,
+    39.89124
+  ]
+}
