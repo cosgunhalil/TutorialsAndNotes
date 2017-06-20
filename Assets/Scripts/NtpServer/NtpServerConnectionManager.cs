@@ -8,10 +8,23 @@ using UnityEngine;
 //http://stackoverflow.com/questions/1193955/how-to-query-an-ntp-server-using-c
 public class NtpServerConnectionManager : MonoBehaviour {
 
-	void Start ()
+    public static NtpServerConnectionManager Instance;
+    public bool IsConnected;
+
+    private void Awake()
     {
-        Debug.Log(GetTime());	
-	}
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+
+        IsConnected = TestConnection();
+    }
+
+    public bool TestConnection()
+    {
+        return true;
+    }
 
     public DateTime GetTime()
     {
