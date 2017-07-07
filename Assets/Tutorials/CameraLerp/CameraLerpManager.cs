@@ -12,20 +12,19 @@ public class CameraLerpManager : MonoBehaviour {
         _transform = GetComponent<Transform>();	
 	}
 
-	void Update () 
+    private void FixedUpdate()
     {
-        if (Target != null)
-        {
+		if (Target != null)
+		{
 			_transform.position = new Vector3(
 
-			  Mathf.Lerp(_transform.position.x, Target.position.x, 5.0f * Time.deltaTime),
-			  Mathf.Lerp(_transform.position.y, Target.position.y, 5.0f * Time.deltaTime),
+			  Mathf.Lerp(_transform.position.x, Target.position.x + 5f, 3.0f * Time.deltaTime),
+			  Mathf.Lerp(_transform.position.y, Target.position.y, 3.0f * Time.deltaTime),
 			  _transform.position.z
 
 		   );
 
 		}
-       
     }
 
     public void SetTarget(Transform target)
