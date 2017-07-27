@@ -25,7 +25,17 @@ public class DataManager : MonoBehaviour {
         {
             var dataString = File.ReadAllText(filePath);
             var loadedData = JsonUtility.FromJson<GameData>(dataString);
-            appLastClosingTime = loadedData.AppLastClosingTime;
+
+            appLastClosingTime = new DateTime(
+                loadedData.Year, 
+                loadedData.Mounth, 
+                loadedData.Day, 
+                loadedData.Hour, 
+                loadedData.Minute, 
+                loadedData.Second
+            );
+
+            Debug.Log(appLastClosingTime);
         }
 
         return appLastClosingTime;
@@ -34,9 +44,22 @@ public class DataManager : MonoBehaviour {
     public void SaveAppLastClosingTime()
     {
         var gameData = new GameData();
-        gameData.AppLastClosingTime = NtpServerConnectionManager.Instance.GetTime();
+        var dateTime = NtpServerConnectionManager.Instance.GetTime();
+
+        gameData.SetDate(
+            dateTime.Year, 
+            dateTime.Month, 
+            dateTime.Day,
+            dateTime.Hour,
+            dateTime.Minute,
+            dateTime.Second
+        ); 
+
+        Debug.Log(gameData.GetDate());
 
         var gameDataJson = JsonUtility.ToJson(gameData);
+        Debug.Log(gameDataJson);
+
         var filePath = Application.dataPath + _gameDataFilePath;
         File.WriteAllText(filePath, gameDataJson);
     }
@@ -45,5 +68,27 @@ public class DataManager : MonoBehaviour {
 [Serializable]
 public class GameData
 {
-    public DateTime AppLastClosingTime;
+
+    public int Year;
+	public int Mounth;
+	public int Day;
+    public int Hour;
+    public int Minute;
+    public int Second;
+
+    public void SetDate(int year , int month, int day, int hour, int minute, int second)
+    {
+        Day = day;
+        Mounth = month;
+        Year = year;
+        Hour = hour;
+        Minute = minute;
+        Second = second;
+    }
+
+    public DateTime GetDate()
+    {
+        var date = new DateTime(Year,Mounth,Day,Hour,Minute,Second);
+        return date;
+    }
 }

@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class Chest : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+}
+
+public enum EChestState
+{
+    readyToOpen,
+	open,
+    closed
 }

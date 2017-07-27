@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using UnityEngine;
 
 //http://stackoverflow.com/questions/1193955/how-to-query-an-ntp-server-using-c
+
 public class NtpServerConnectionManager : MonoBehaviour {
 
     public static NtpServerConnectionManager Instance;
