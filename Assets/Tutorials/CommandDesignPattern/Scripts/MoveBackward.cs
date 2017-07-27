@@ -5,11 +5,17 @@ using UnityEngine;
 
 public class MoveBackward : Command
 {
+
+	public override void Init(CommandManager manager)
+	{
+        _commandManager = manager;
+	}
+
     public override void Execute(Soldier objectTransform, Command command)
 	{
         Move(objectTransform.GetTransform());
 
-        CommandManager.Instance.PrevCommands.Add(command);
+        _commandManager.AddCommandToContainer(command);
 	}
 
 	public override void Undo(Transform objectTransform)

@@ -4,47 +4,45 @@ using UnityEngine;
 
 public class CommandManager : MonoBehaviour {
 
-    public static CommandManager Instance;
-
     public InputHandler InputManager;
 
-	public Soldier SoldierObject;
+    public Soldier CurrentSelectedSoldierObject;
+
+    public TroopManager _troopManager;
 
     public Command _moveForwardCommand;
 	public Command _moveBackwardCommand;
 	public Command _moveLeftCommand;
 	public Command _moveRightCommand;
 	public Command _undoCommand;
-	public Command _replayCommand;
 
-	public List<Command> PrevCommands = new List<Command>();
+    private Dictionary<Soldier, List<Command>> _commandDictionary = new Dictionary<Soldier, List<Command>>();
 
 	private Vector3 _objectStartPos;
 
-	private Coroutine _replayCoroutine;
+    private Soldier _prevSelectedSoldierObject;
 
-	public bool shouldStartReplay;
-
-
-	// Use this for initialization
 	void Start () 
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-
-        SoldierObject.Init();
         InputManager.Init(this);
 
-		_moveForwardCommand = new MoveForward();
-		_moveBackwardCommand = new MoveBackward();
-		_moveLeftCommand = new MoveLeft();
-		_moveRightCommand = new MoveRight();
-		_undoCommand = new Undo();
-		_replayCommand = new Replay();
+        _moveForwardCommand = new MoveForward();
+        _moveForwardCommand.Init(this);
 
-		_objectStartPos = SoldierObject.GetStartPosition();
+		_moveBackwardCommand = new MoveBackward();
+        _moveBackwardCommand.Init(this);
+
+		_moveLeftCommand = new MoveLeft();
+        _moveLeftCommand.Init(this);
+
+		_moveRightCommand = new MoveRight();
+        _moveRightCommand.Init(this);
+
+		_undoCommand = new Undo();
+        _undoCommand.Init(this);
+
+        _troopManager.Init();
+
 	}
 
     void Update()
@@ -52,36 +50,54 @@ public class CommandManager : MonoBehaviour {
         InputManager.HandleInput();
     }
 
-    public void StartReplay()
-	{
-		if (shouldStartReplay && PrevCommands.Count > 0)
-		{
-			shouldStartReplay = false;
+    public void SetSelectedSoldier(Soldier soldier)
+    {
+        if (CurrentSelectedSoldierObject == null)
+        {
+            CurrentSelectedSoldierObject = soldier;
+        }
+        else
+        {
+            _prevSelectedSoldierObject = CurrentSelectedSoldierObject;
+            CurrentSelectedSoldierObject = soldier;
+        }
 
-			if (_replayCoroutine != null)
-			{
-				StopCoroutine(_replayCoroutine);
-			}
+        if (_prevSelectedSoldierObject != null) 
+        {
+            _prevSelectedSoldierObject.DeSelect();
+        }
 
-			_replayCoroutine = StartCoroutine(ReplayCommands(SoldierObject.GetTransform()));
-		}
-	}
+        if (_commandDictionary.ContainsKey(CurrentSelectedSoldierObject) == false)
+        {
+            CreateCommanContainer();
+        }
 
-	IEnumerator ReplayCommands(Transform objectTransform)
-	{
-		InputManager._isReplay = true;
+        CurrentSelectedSoldierObject.Select(Color.green);
+    }
 
-		objectTransform.position = _objectStartPos;
+    public List<Command> GetCommandContainer()
+    {
+        var commandContainer = _commandDictionary[CurrentSelectedSoldierObject];
+        return commandContainer;
+    }
 
-		for (int i = 0; i < PrevCommands.Count; i++)
-		{
-			PrevCommands[i].Move(objectTransform);
+    public void AddCommandToContainer(Command command)
+    {
+		var commandContainer = new List<Command>();
 
-			yield return new WaitForSeconds(0.3f);
-		}
+        if (_commandDictionary.ContainsKey(CurrentSelectedSoldierObject) == false)
+        {
+            CreateCommanContainer();
+        }
 
-		InputManager._isReplay = false;
-	}
+        commandContainer = _commandDictionary[CurrentSelectedSoldierObject];
+		commandContainer.Add(command);
+    }
 
+    public void CreateCommanContainer()
+    {
+        var commandContainer = new List<Command>();
+        _commandDictionary.Add(CurrentSelectedSoldierObject, commandContainer);
+    }
 
 }

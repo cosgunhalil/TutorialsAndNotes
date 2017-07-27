@@ -7,50 +7,61 @@ using UnityEngine;
 
 public class InputHandler : MonoBehaviour {
 
-    private CommandManager _commandManager;
-    public bool _isReplay;
+    public LayerMask AllowedLayer;
+
+	private CommandManager _commandManager;
+    private Camera _mainCamera;
+    private Transform _mainCameraTransform;
 
     public void Init(CommandManager commandManager)
     {
         _commandManager = commandManager;
+        _mainCamera = Camera.main;
+        _mainCameraTransform = Camera.main.transform;
     }
 
 	void InputHandlerUpdate()
 	{
-		if (!_isReplay)
-		{
-			HandleInput();
-		}
-
-        _commandManager.StartReplay();
+		HandleInput();
 	}
 
 	public void HandleInput()
 	{
         if (Input.GetKeyDown(KeyCode.LeftArrow))
 		{
-            _commandManager._moveLeftCommand.Execute(_commandManager.SoldierObject, _commandManager._moveLeftCommand);
+            _commandManager._moveLeftCommand.Execute(_commandManager.CurrentSelectedSoldierObject, _commandManager._moveLeftCommand);
 		}
         else if (Input.GetKeyDown(KeyCode.RightArrow))
 		{
-            _commandManager._moveRightCommand.Execute(_commandManager.SoldierObject, _commandManager._moveRightCommand);
+            _commandManager._moveRightCommand.Execute(_commandManager.CurrentSelectedSoldierObject, _commandManager._moveRightCommand);
 		}
         else if (Input.GetKeyDown(KeyCode.UpArrow))
 		{
-			_commandManager._moveForwardCommand.Execute(_commandManager.SoldierObject, _commandManager._moveForwardCommand);
+			_commandManager._moveForwardCommand.Execute(_commandManager.CurrentSelectedSoldierObject, _commandManager._moveForwardCommand);
 		}
         else if (Input.GetKeyDown(KeyCode.DownArrow))
 		{
-			_commandManager._moveBackwardCommand.Execute(_commandManager.SoldierObject, _commandManager._moveBackwardCommand);
-		}
-        else if (Input.GetKeyDown(KeyCode.R))
-		{
-            _commandManager._replayCommand.Execute(_commandManager.SoldierObject, _commandManager._replayCommand);
+			_commandManager._moveBackwardCommand.Execute(_commandManager.CurrentSelectedSoldierObject, _commandManager._moveBackwardCommand);
 		}
         else if (Input.GetKeyDown(KeyCode.U))
 		{
-            _commandManager._undoCommand.Execute(_commandManager.SoldierObject, _commandManager._undoCommand);
+            _commandManager._undoCommand.Execute(_commandManager.CurrentSelectedSoldierObject, _commandManager._undoCommand);
 		}
-	}
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            var ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
+
+			RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, float.MaxValue,AllowedLayer))
+			{
+                var soldier = hit.collider.GetComponent<Soldier>();
+                _commandManager.SetSelectedSoldier(soldier);
+            }
+        }
+
+       
+    }
 }
 
