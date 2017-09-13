@@ -5,14 +5,10 @@ using UnityEngine;
 public class Item : MonoBehaviour 
 {
     public EItemType type;
-}
+	public TextMesh Text;
 
-public enum EItemType
-{
-    alnus,
-    almond,
-    arfaj,
-    bindweed,
-    cornel,
-    crowfoot,
+    public void Init()
+    {
+        Text.text = type.ToString();
+    }
 }
