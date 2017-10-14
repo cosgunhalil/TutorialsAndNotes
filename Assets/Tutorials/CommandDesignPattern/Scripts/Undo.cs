@@ -1,24 +1,30 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Undo : Command {
 
-	//Called when we press a key
+	public override void Init(CommandManager manager)
+	{
+        _commandManager = manager;
+	}
+
     public override void Execute(Soldier objectTransform, Command command)
 	{
-        List<Command> prevCommands = CommandManager.Instance.PrevCommands;
 
-		if (prevCommands.Count > 0)
+        List<Command> prevCommands = _commandManager.GetCommandContainer();
+
+        if (prevCommands.Count > 0 && prevCommands != null)
 		{
 			Command latestCommand = prevCommands[prevCommands.Count - 1];
 
-			//Move the box with this command
             latestCommand.Undo(objectTransform.GetTransform());
 
-			//Remove the command from the list
 			prevCommands.RemoveAt(prevCommands.Count - 1);
 		}
+
 	}
+
 
 }

@@ -60,9 +60,9 @@ public class MovingCube : MonoBehaviour {
 
 		if (distance > 1.0f)
 		{
-            Vector3 dir = target.position - transform.position;
+            Vector3 dir = target.position - _transform.position;
 			dir.Normalize();                                    
-            transform.position += dir * _speed * Time.deltaTime; 
+            _transform.position += dir * _speed * Time.deltaTime; 
 		}
         else
         {
